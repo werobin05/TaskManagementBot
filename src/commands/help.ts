@@ -1,5 +1,5 @@
-import type { Command } from "./types"
-import { EmbedBuilder, Message} from 'discord.js';
+import type { Command } from "../types/types"
+import { EmbedBuilder, Message } from 'discord.js';
 
 const help: Command = {
     name: "help",

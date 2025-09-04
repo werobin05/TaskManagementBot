@@ -1,10 +1,10 @@
-import { date, integer, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+import { bigint, date, integer, pgEnum, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const task_status = pgEnum('status', ["done", "in process", "not feasible"]);
 
 export const Users = pgTable('Users', {
     user_id: integer('user_id').primaryKey().generatedAlwaysAsIdentity(),
-    discord_id: integer('discord_id'),
+    discord_id: bigint('discord_id', { mode: 'bigint' }),
     full_name: varchar('full_name', { length: 50 }).notNull(),
     group: varchar('group', { length: 10 }).notNull(),
     created_at: timestamp('created_at', { mode: 'string' }).defaultNow(),

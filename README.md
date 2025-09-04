@@ -1,4 +1,4 @@
-# discord.js-drizzle-orm-pg-dotenv-
+# Task Management Bot
 
 To install dependencies:
 

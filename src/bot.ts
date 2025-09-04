@@ -2,8 +2,9 @@ import path from "path";
 import dotenv from "dotenv";
 import { readdirSync } from "fs";
 import { pathToFileURL } from "url";
-import type { Command } from "./commands/types";
+import type { Command } from "./types/types";
 import { Client, Events, GatewayIntentBits } from "discord.js";
+import { RegisterModal } from "./utils/register_modal";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ export async function InitBot() {
   client.on(Events.ClientReady, (ready_client) => {
     console.log(`Logged in as ${ready_client.user.tag}`);
   });
+  RegisterModal(client)
   const commands = new Map<string, Command>();
   
   for (const file of readdirSync(commands_path)) {

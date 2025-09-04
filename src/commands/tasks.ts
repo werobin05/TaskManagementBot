@@ -1,7 +1,6 @@
-import type { Command } from "./types";
+import type { Command } from "../types/types";
 import { db } from "../database";
 import { Task } from "../database/schema";
-import type { Tasks } from "../types/tasks";
 
 const tasks: Command = {
   name: "tasks",
@@ -20,12 +19,17 @@ const tasks: Command = {
       "Дедлайн",
       "Дата создания",
     ];
+
+    function formatDeadline(date?: string | Date | null) {
+      if (!date) return "Дедлайн не задан"
+    }
+
     const rows = find_task.map((t) => [
       t.task_id,
       t.name_task,
       t.description_task ?? "",
-      t.deadline_task?.toString() ?? "",
-      t.created_at?.toString() ?? "",
+      t.deadline_task?.toString() ? new Date(t.deadline_task).toDateString() : "Дедлайн не задан",
+      t.created_at?.toString() ? new Date(t.created_at).toDateString() : "",
     ]);
     const col_widths = headers.map((h, i) =>
       Math.max(
