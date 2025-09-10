@@ -29,21 +29,21 @@ const ranting: Command = {
         .from(Users)
         .leftJoin(Ranting, eq(Users.user_id, Ranting.user_id));
       if (ranting.length >= 1) {
+        const sorted = ranting.sort(
+          (a, b) => (b.scores ?? 0) - (a.scores ?? 0)
+        );
+
         const headers = ["№", "Имя студента", "Группа", "Баллы"];
-
         const rows: string[][] = [];
-        for (const list_ranting of ranting) {
-          const full_name_lines = wrapText(
-            list_ranting.full_name ?? "",
-            MAX_COL_WIDTH
-          );
 
-          const max_list = Math.max(list_ranting.scores!)
+        sorted.forEach((item, index) => {
+          const full_name_lines = wrapText(item.full_name ?? "", MAX_COL_WIDTH);
+
           rows.push([
-            max_list.toString(),
-            list_ranting.full_name,
-            list_ranting.group,
-            list_ranting.scores?.toString()!,
+            (index + 1).toString(), // место в рейтинге
+            item.full_name ?? "—",
+            item.group ?? "—",
+            item.scores?.toString() ?? "0",
           ]);
 
           for (let i = 1; i < full_name_lines.length; i++) {
@@ -51,7 +51,7 @@ const ranting: Command = {
           }
 
           rows.push(["-", "-", "-", "-"]);
-        }
+        });
 
         const col_widths = headers.map((h, i) =>
           Math.max(
@@ -80,7 +80,6 @@ const ranting: Command = {
         await message.reply(table);
       } else {
         await message.reply("🏆 Рейтинг пуст");
-        return;
       }
     } catch (error) {
       console.log("Error: ", error);
