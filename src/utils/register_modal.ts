@@ -45,7 +45,7 @@ export function RegisterModal(client: Client) {
       interaction.isModalSubmit() &&
       interaction.customId === "register_modal"
     ) {
-      await interaction.deferReply({ ephemeral: true });
+      await interaction.deferReply({ flags: 64 });
       const full_name = interaction.fields.getTextInputValue("full_name");
       const group = interaction.fields.getTextInputValue("group");
       const discord_id = BigInt(interaction.user.id);
