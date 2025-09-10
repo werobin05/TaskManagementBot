@@ -36,4 +36,7 @@ export const Visiting = pgTable('Visiting', {
     user_id: integer('user_id').references(() => Users.user_id),
     date_visit: date('visit', { mode: 'date' }).defaultNow(),
     status: visit_status().default("Отсутствовал(а)")
-})
+});
+
+
+// Иван Иванов Иванович

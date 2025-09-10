@@ -5,6 +5,7 @@ import {
   TextInputStyle,
   TextInputBuilder,
   ActionRowBuilder,
+  MessageFlags,
 } from "discord.js";
 import { eq } from "drizzle-orm";
 import { db } from "../database";
@@ -45,7 +46,7 @@ export function RegisterModal(client: Client) {
       interaction.isModalSubmit() &&
       interaction.customId === "register_modal"
     ) {
-      await interaction.deferReply({ flags: 64 });
+      
       const full_name = interaction.fields.getTextInputValue("full_name");
       const group = interaction.fields.getTextInputValue("group");
       const discord_id = BigInt(interaction.user.id);
@@ -57,16 +58,9 @@ export function RegisterModal(client: Client) {
 
       try {
         if (existing_user.length > 0) {
-          if (interaction.replied || interaction.deferred) {
-            await interaction.editReply({
-              content: "⚠️ Вы уже зарегистрированы!",
-            });
-          } else {
-            await interaction.reply({
-              content: "⚠️ Вы уже зарегистрированы!",
-              flags: 64,
-            });
-          }
+          await interaction.editReply({
+            content: "⚠️ Вы уже зарегистрированы!",
+          });
         } else {
           await db.insert(Users).values({
             discord_id: discord_id,
@@ -74,25 +68,17 @@ export function RegisterModal(client: Client) {
             group: group,
           });
 
-          if (interaction.replied && interaction.deferred) {
-            await interaction.editReply({
-              content: "✅ Вы успешно зарегистрированы!",
-            });
-          } else {
-            await interaction.reply({
-              content: "✅ Вы успешно зарегистрированы!",
-              flags: 64,
-            });
-          }
-        }
-      } catch (error) {
-        console.error(error);
-        if (!interaction.replied && !interaction.deferred) {
           await interaction.reply({
-            content: "⚠️ Вы уже зарегистрированы!",
+            content: "✅ Вы успешно зарегистрированы!",
             flags: 64,
           });
         }
+      } catch (error) {
+        console.error(error);
+        await interaction.reply({
+          content: "⚠️ Вы уже зарегистрированы!",
+          flags: 64,
+        });
       }
     }
   });
