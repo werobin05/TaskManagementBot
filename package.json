@@ -4,9 +4,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "tsx watch index.ts",
-    "start": "tsx index.ts",
-    "build": "tsc",
+    "dev": "bun --watch index.ts",
+    "start": "bun index.ts",
+    "build": "bun build index.ts --outdir dist",
     "db:push": "drizzle-kit push"
   },
   "devDependencies": {

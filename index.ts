@@ -1,7 +1,7 @@
-import { InitBot } from './src/bot.ts'
+import { InitBot } from './src/bot';
 
-async function InitProject() {
-    return await InitBot();
+async function InitProd() {
+    await InitBot();
 }
 
-await InitProject()
+await InitProd();

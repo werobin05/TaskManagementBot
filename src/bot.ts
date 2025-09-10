@@ -2,6 +2,7 @@ import path from "path";
 import dotenv from "dotenv";
 import { readdirSync } from "fs";
 import { pathToFileURL } from "url";
+import { fileURLToPath } from "url";
 import type { Command } from "./types/types";
 import { RegisterModal } from "./utils/register_modal";
 import { Client, Events, GatewayIntentBits } from "discord.js";
@@ -9,7 +10,9 @@ import { Client, Events, GatewayIntentBits } from "discord.js";
 dotenv.config();
 
 const PREFIX = "?";
-const commands_path = path.join(process.cwd(), "src", "commands");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const commands_path = path.join(__dirname, "commands");
 
 export async function InitBot() {
   const client = new Client({
@@ -26,8 +29,8 @@ export async function InitBot() {
   const commands = new Map<string, Command>();
   
   for (const file of readdirSync(commands_path)) {
-    if (file === "types.ts") continue;
-    if (file.endsWith(".ts")) {
+    if (file === "types.ts" || file === "types.js") continue;
+    if (file.endsWith(".ts") || file.endsWith(".js")) {
       const file_path = path.join(commands_path, file);
       const command_module = await import(pathToFileURL(file_path).href);
       const command: Command = command_module.default;
