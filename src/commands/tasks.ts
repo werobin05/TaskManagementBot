@@ -1,6 +1,6 @@
-import type { Command } from "../types/types";
 import { db } from "../database";
 import { Task } from "../database/schema";
+import type { Command } from "../types/types";
 
 const MAX_COL_WIDTH = 30;
 
