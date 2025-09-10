@@ -57,7 +57,7 @@ const tasks: Command = {
         t.task_id.toString(),
         t.name_task,
         desc_lines[0] ?? "",
-        t.status!,
+        formatStatus(t.status),
         deadline!,
       ]);
 
