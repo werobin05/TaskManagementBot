@@ -16,8 +16,8 @@ function wrapText(text: string, width: number) {
 }
 
 const ranting: Command = {
-  name: "ranting",
-  description: "Отслеживание вашего рейтинг",
+  name: "rating",
+  description: "Таблица рейтинга",
   async execute(message) {
     try {
       const ranting = await db
