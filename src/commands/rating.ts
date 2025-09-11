@@ -40,7 +40,7 @@ const ranting: Command = {
           const full_name_lines = wrapText(item.full_name ?? "", MAX_COL_WIDTH);
 
           rows.push([
-            (index + 1).toString(), // место в рейтинге
+            (index + 1).toString(),
             item.full_name ?? "—",
             item.group ?? "—",
             item.scores?.toString() ?? "0",
