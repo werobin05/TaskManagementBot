@@ -38,7 +38,7 @@ export const Visiting = pgTable('Visiting', {
     status: visit_status().default("Отсутствовал(а)")
 });
 
-export const Ranting = pgTable('Ranting', {
+export const Rating = pgTable('Rating', {
     rank_id: integer('rank_id').primaryKey().generatedAlwaysAsIdentity(),
     user_id: integer('user_id').references(() => Users.user_id),
     ball: integer('ball').default(0)

@@ -14,20 +14,6 @@ function wrapText(text: string, width: number) {
   return lines;
 }
 
-function formatStatus(status: string | null) {
-  switch (status) {
-    case "Завершена":
-      return "✅";
-    case "В процессе":
-      return "⏳";
-    case "Не актуальна":
-      return "🔒";
-
-    default:
-      return "-";
-  }
-}
-
 const tasks: Command = {
   name: "tasks",
   description: "Отображает все задачи ",
@@ -57,7 +43,7 @@ const tasks: Command = {
         t.task_id.toString(),
         t.name_task,
         desc_lines[0] ?? "",
-        formatStatus(t.status),
+        t.status ?? "-",
         deadline!,
       ]);
 
