@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../database";
-import { Users, Ranting } from "../database/schema";
+import { Users, Rating } from "../database/schema";
 import type { Command } from "../types/types";
 
 const MAX_COL_WIDTH = 30;
@@ -15,7 +15,7 @@ function wrapText(text: string, width: number) {
   return lines;
 }
 
-const ranting: Command = {
+const rating: Command = {
   name: "rating",
   description: "Таблица рейтинга",
   async execute(message) {
@@ -24,10 +24,10 @@ const ranting: Command = {
         .select({
           full_name: Users.full_name,
           group: Users.group,
-          scores: Ranting.ball,
+          scores: Rating.ball,
         })
         .from(Users)
-        .leftJoin(Ranting, eq(Users.user_id, Ranting.user_id));
+        .leftJoin(Rating, eq(Users.user_id, Rating.user_id));
       if (ranting.length >= 1) {
         const sorted = ranting.sort(
           (a, b) => (b.scores ?? 0) - (a.scores ?? 0)
@@ -87,4 +87,4 @@ const ranting: Command = {
   },
 };
 
-export default ranting;
+export default rating;
