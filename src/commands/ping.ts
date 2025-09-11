@@ -4,7 +4,15 @@ const ping: Command = {
   name: "ping",
   description: "Простой пинг",
   async execute(message) {
-    await message.reply("🏓 Pong!");
+    const sent = await message.reply("🏓 Проверяю пинг...!");
+    const latency = sent.createdTimestamp - message.createdTimestamp;
+    const api_latency = Math.round(message.client.ws.ping);
+
+    await sent.edit(
+      `🏓 Pong!\n` +
+        `Задержка сообщения: **${latency}ms**\n` +
+        `API задержка: **${api_latency}ms**`
+    );
   },
 };
 
