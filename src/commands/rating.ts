@@ -2,25 +2,30 @@ import { eq } from "drizzle-orm";
 import { db } from "../database";
 import { Users, Rating } from "../database/schema";
 import type { Command } from "../types/types";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ComponentType,
+  EmbedBuilder,
+} from "discord.js";
 
-const MAX_COL_WIDTH = 30;
+const PAGE_SIZE = 5;
+const MAX_NAME = 30;
+const MAX_GROUP = 5;
 
-function wrapText(text: string, width: number) {
-  const lines: string[] = [];
-  let start = 0;
-  while (start < text.length) {
-    lines.push(text.slice(start, start + width));
-    start += width;
+function format_ceil(text: string, max: number) {
+  if (text.length > max) {
+    return text.slice(0, max - 1) + "...";
   }
-  return lines;
+  return text.padEnd(max, " ");
 }
-
 const rating: Command = {
   name: "rating",
   description: "Таблица рейтинга",
   async execute(message) {
     try {
-      const ranting = await db
+      const data = await db
         .select({
           full_name: Users.full_name,
           group: Users.group,
@@ -28,61 +33,88 @@ const rating: Command = {
         })
         .from(Users)
         .leftJoin(Rating, eq(Users.user_id, Rating.user_id));
-      if (ranting.length >= 1) {
-        const sorted = ranting.sort(
-          (a, b) => (b.scores ?? 0) - (a.scores ?? 0)
-        );
+      if (!data.length) {
+        message.reply("🏆 Рейтинг пуст");
+        return;
+      }
 
-        const headers = ["№", "Имя студента", "Группа", "Баллы"];
-        const rows: string[][] = [];
+      const sorted = data.sort((a, b) => (b.scores ?? 0) - (a.scores ?? 0));
+      const total_page = Math.ceil(sorted.length / PAGE_SIZE);
+      let page: number = 0;
 
-        sorted.forEach((item, index) => {
-          const full_name_lines = wrapText(item.full_name ?? "", MAX_COL_WIDTH);
+      function generate_embed(page: number) {
+        const start = page * PAGE_SIZE;
+        const slice = sorted.slice(start, start + PAGE_SIZE);
 
-          rows.push([
-            (index + 1).toString(),
-            item.full_name ?? "—",
-            item.group ?? "—",
-            item.scores?.toString() ?? "0",
-          ]);
+        let desc = "```md\n № | ФИО                            |Группа|Баллы\n";
+        desc += "------------------------------------------\n";
 
-          for (let i = 1; i < full_name_lines.length; i++) {
-            rows.push(["", full_name_lines[i]!, "", ""]);
-          }
+        slice.forEach((item, i) => {
+          const num = (start + i + 1).toString().padEnd(2, " ");
+          const name = format_ceil(item.full_name || "-", MAX_NAME);
+          const group = format_ceil(item.group || "-", MAX_GROUP);
+          const score = (item.scores ?? 0).toString().padEnd(3, " ");
 
-          rows.push(["-", "-", "-", "-"]);
+          desc += `${num} | ${name} | ${group} | ${score}\n`;
         });
 
-        const col_widths = headers.map((h, i) =>
-          Math.max(
-            h.length,
-            ...rows.map((r) => (r[i] != null ? String(r[i]).length : 0))
-          )
-        );
+        desc += "```";
 
-        function format_row(row: string[]) {
-          return row.map((cell, i) => cell.padEnd(col_widths[i]!)).join(" | ");
+        return new EmbedBuilder()
+          .setTitle("🏆 Таблица рейтинга")
+          .setDescription(desc)
+          .setFooter({ text: `Страница ${page + 1}/ ${total_page}` });
+      }
+
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId("prev")
+          .setLabel("⏪")
+          .setStyle(ButtonStyle.Danger),
+
+        new ButtonBuilder()
+          .setCustomId("next")
+          .setLabel("⏩️")
+          .setStyle(ButtonStyle.Success)
+      );
+
+      const reply = await message.reply({
+        embeds: [generate_embed(page)],
+        components: [row],
+      });
+
+      const collector = reply.createMessageComponentCollector({
+        componentType: ComponentType.Button,
+        time: 2 * 60_000,
+      });
+
+      collector.on("collect", async (interaction) => {
+        if (interaction.user.id !== message.author.id) {
+          return interaction.reply({
+            content: "⛔️ Это не твоя кнопка",
+            flags: 64,
+          });
+        }
+        if (interaction.customId === "prev") {
+          page = page > 0 ? page - 1 : total_page - 1;
+        } else {
+          page = page + 1 < total_page ? page + 1 : 0;
         }
 
-        const separator = col_widths.map((w) => "-".repeat(w)).join("-+-");
+        await interaction.update({
+          embeds: [generate_embed(page)],
+          components: [row],
+        });
+      });
 
-        let table = "```md\n";
-        table += format_row(headers) + "\n";
-        table += separator + "\n";
-
-        const formatted_rows = rows
-          .map((r) => (r[0] === "-" ? separator : format_row(r)))
-          .slice(0, -1);
-
-        table += formatted_rows.join("\n");
-        table += "\n```";
-
-        await message.reply(table);
-      } else {
-        await message.reply("🏆 Рейтинг пуст");
-      }
+      collector.on("end", async () => {
+        await reply.edit({
+          components: [],
+        });
+      });
     } catch (error) {
-      console.log("Error: ", error);
+      console.error("Ошибка команды rating:", error);
+      message.reply("❌ Произошла ошибка при загрузке рейтинга.");
     }
   },
 };
