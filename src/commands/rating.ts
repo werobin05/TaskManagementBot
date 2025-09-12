@@ -12,7 +12,7 @@ import {
 
 const PAGE_SIZE = 5;
 const MAX_NAME = 30;
-const MAX_GROUP = 5;
+const MAX_GROUP = 10;
 
 function format_ceil(text: string, max: number) {
   if (text.length > max) {
@@ -46,14 +46,14 @@ const rating: Command = {
         const start = page * PAGE_SIZE;
         const slice = sorted.slice(start, start + PAGE_SIZE);
 
-        let desc = "```md\n № | ФИО                            |Группа|Баллы\n";
-        desc += "------------------------------------------\n";
+        let desc = "```md\n № | ФИО                            | Группа     | Баллы\n";
+        desc += "--------------------------------------------------------\n";
 
         slice.forEach((item, i) => {
           const num = (start + i + 1).toString().padEnd(2, " ");
           const name = format_ceil(item.full_name || "-", MAX_NAME);
           const group = format_ceil(item.group || "-", MAX_GROUP);
-          const score = (item.scores ?? 0).toString().padEnd(3, " ");
+          const score = (item.scores ?? 0).toString().padEnd(5, " ");
 
           desc += `${num} | ${name} | ${group} | ${score}\n`;
         });
