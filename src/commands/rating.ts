@@ -63,18 +63,18 @@ const rating: Command = {
         return new EmbedBuilder()
           .setTitle("🏆 Таблица рейтинга")
           .setDescription(desc)
-          .setFooter({ text: `Страница ${page + 1}/ ${total_page}` });
+          .setFooter({ text: `Страница ${page + 1}/ ${total_page} | P.S Таблица работает в течении 2 минут` });
       }
 
       const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
           .setCustomId("prev")
-          .setLabel("⏪")
+          .setLabel("⏪ Назад")
           .setStyle(ButtonStyle.Danger),
 
         new ButtonBuilder()
           .setCustomId("next")
-          .setLabel("⏩️")
+          .setLabel("Вперёд ⏩️")
           .setStyle(ButtonStyle.Success)
       );
 
