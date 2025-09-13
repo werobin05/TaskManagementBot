@@ -34,7 +34,7 @@ export const UserTask = pgTable('UserTask', {
 export const Visiting = pgTable('Visiting', {
     visit_id: integer('visit_id').primaryKey().generatedAlwaysAsIdentity(),
     user_id: integer('user_id').references(() => Users.user_id),
-    date_visit: date('date_visit', { mode: 'date' }).defaultNow(),
+    date_visit: date('date_visit', { mode: 'string' }).defaultNow(),
     status: visit_status().default("Отсутствовал(а)")
 });
 
