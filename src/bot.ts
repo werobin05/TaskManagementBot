@@ -53,7 +53,7 @@ export async function InitBot() {
 
     const command = commands.get(command_name);
     if (!command) {
-      await message.reply('❌ данной команды не существует');
+      await message.reply('❌ Данной команды не существует');
       return;
     }
 
