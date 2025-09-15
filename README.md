@@ -9,8 +9,6 @@ Documentation for the discord bot. The TaskManagement bot is designed to automat
 **Bot:** TypeScript, Bun, drizzle-orm, postgresql
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Bun](https://img.shields.io/badge/Bun-%23000000?style=for-the-badge&logo=bun&logoColor=white)](https://bun.com/)
 
 [![Drizzle ORM](https://img.shields.io/badge/Drizzle%20ORM-A0AF9D?style=for-the-badge&logo=drizzle&logoColor=white)](https://orm.drizzle.team/)
