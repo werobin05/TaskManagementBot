@@ -21,45 +21,60 @@ export const mv: Command = {
       )
     ) {
       await message.reply("⛔ У тебя нет прав для выполнения этой команды.");
-      console.log("TEATHER_ROLE_ID:", process.env.TEACHER_ROLE_ID);
-      console.log("User roles:", message.member?.roles.cache.map(r => r.id));
       return;
     }
 
-    const voice_channel = message.guild?.channels.cache.get(process.env.ALLOWED_VOICE_CHANNEL_ID!);
+    const voice_channel = message.guild?.channels.cache.get(
+      process.env.ALLOWED_VOICE_CHANNEL_ID!
+    );
     if (!voice_channel) {
       await message.reply("🎙️ Зайдите в аудиторию, что бы отметить студентов");
       return;
     }
 
-    if (!voice_channel || !(voice_channel instanceof VoiceChannel || voice_channel instanceof StageChannel)) {
+    if (
+      !voice_channel ||
+      !(
+        voice_channel instanceof VoiceChannel ||
+        voice_channel instanceof StageChannel
+      )
+    ) {
       await message.reply("❌ Указанный канал не является голосовым.");
       return;
     }
-    
+
     const voice_members = voice_channel.members;
     if (voice_members.size === 0) {
-        await message.reply("👥 В аудитории никого нету.")
+      await message.reply("👥 В аудитории никого нету.");
     }
 
     const all_users = await db.select().from(Users);
+    const today = new Date().toISOString().split("T")[0];
     const marked_students: string[] = [];
 
-    for (const [, m] of voice_members) {
-      const user = all_users.find((u) => u.discord_id === BigInt(m.id));
+    for (const user of all_users) {
+      const is_present = voice_members.has(String(user.discord_id));
+  
 
       if (user) {
         const today_visit = await db
           .select()
           .from(Visiting)
-          .where(eq(Visiting.user_id, user.user_id));
+          .where(
+            and(
+              eq(Visiting.user_id, user.user_id),
+              eq(Visiting.date_visit, today)
+            )
+          );
 
         if (today_visit.length === 0) {
-          await db.insert(Visiting).values({
-            user_id: user.user_id,
-            date_visit: new Date().toISOString().split("T")[0],
-            status: "Присутствовал(а)",
-          });
+          if (is_present) {
+            await db.insert(Visiting).values({
+              user_id: user.user_id,
+              date_visit: today,
+              status: "Присутствовал(а)",
+            });
+          }
 
           const rating = (
             await db
@@ -83,7 +98,16 @@ export const mv: Command = {
           }
 
           marked_students.push(
-            `${user.full_name ?? "Неизвестный"}: ${new_points} балл(ов)\n`
+            `${user.full_name ?? "Неизвестный"}: ${new_points} балл(ов) ✅`
+          );
+        } else {
+          await db.insert(Visiting).values({
+            user_id: user.user_id,
+            date_visit: today,
+            status: "Отсутствовал(а)",
+          });
+          marked_students.push(
+            `${user.full_name ?? "Неизвестный"}: ❌ отсутствовал(а)`
           );
         }
       }
@@ -92,9 +116,7 @@ export const mv: Command = {
       await message.reply("ℹ️ Сегодня все студенты были отмечены.");
     } else {
       await message.reply(
-        `✅ Отмечены студенты: (${
-          marked_students.length
-        }):\n ${marked_students.join("")}`
+        `📋 Отметка завершена:\n${marked_students.join("\n")}`
       );
     }
   },
