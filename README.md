@@ -21,9 +21,11 @@ Documentation for the discord bot. The TaskManagement bot is designed to automat
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`DATABASE_URL`
-`TOKEN`
-`TEATHER_ROLE_ID`
+`DATABASE_URL=<server_name>://<username>:<password>@<host>:<port>/<database>`
+`TOKEN=token_bot`
+
+`TEACHER_ROLE_ID=ID_Role`
+`ALLOWED_VOICE_CHANNEL_ID=Voice_Channel_ID`
 
 
 ## Installation
