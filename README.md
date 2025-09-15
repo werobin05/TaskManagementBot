@@ -7,6 +7,7 @@ Documentation for the discord bot. The TaskManagement bot is designed to automat
 ## Tech Stack
 
 **Bot:** TypeScript, Bun, drizzle-orm, postgresql
+
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
 [![Bun](https://img.shields.io/badge/Bun-%23000000?style=for-the-badge&logo=bun&logoColor=white)](https://bun.com/)
