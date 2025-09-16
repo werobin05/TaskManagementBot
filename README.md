@@ -33,12 +33,11 @@ To run this project, you will need to add the following environment variables to
 Install TaskManagementBot with bun
 
 #### Installation Instructions
-1. Fork this repo
-2. Run `git clone https://github.com/werobin05/TaskManagementBot`
-3. Run `cd TaskManagementBot`
-4. Create `.env` file and fill it out with variables provided above (you can use `nano .env` or any other IDEs/text editors you prefer)
-5. Run `bun install` to install required dependencies
-6. Enter `bun dev` to run this bot
+1. Run `git clone https://github.com/werobin05/TaskManagementBot`
+2. Run `cd TaskManagementBot`
+3. Create `.env` file and fill it out with variables provided above (you can use `nano .env` or any other IDEs/text editors you prefer)
+4. Run `bun install` to install required dependencies
+5. Enter `bun dev` to run this bot
 
 ## Authors
 
