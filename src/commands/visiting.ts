@@ -54,7 +54,6 @@ export const mv: Command = {
 
     for (const user of all_users) {
       const is_present = voice_members.has(String(user.discord_id));
-  
 
       if (user) {
         const today_visit = await db
@@ -74,41 +73,44 @@ export const mv: Command = {
               date_visit: today,
               status: "Присутствовал(а)",
             });
-          }
 
-          const rating = (
-            await db
-              .select()
-              .from(Rating)
-              .where(eq(Rating.user_id, user.user_id))
-          )[0];
-          let new_points: number;
-          if (rating) {
-            new_points = Math.min(rating.ball! + POINTS_PER_VISIT, MAX_POINTS);
-            await db
-              .update(Rating)
-              .set({ ball: new_points })
-              .where(eq(Rating.user_id, user.user_id));
+            const rating = (
+              await db
+                .select()
+                .from(Rating)
+                .where(eq(Rating.user_id, user.user_id))
+            )[0];
+            let new_points: number;
+            if (rating) {
+              new_points = Math.min(
+                rating.ball! + POINTS_PER_VISIT,
+                MAX_POINTS
+              );
+              await db
+                .update(Rating)
+                .set({ ball: new_points })
+                .where(eq(Rating.user_id, user.user_id));
+            } else {
+              new_points = POINTS_PER_VISIT;
+              await db.insert(Rating).values({
+                user_id: user.user_id,
+                ball: new_points,
+              });
+            }
+
+            marked_students.push(
+              `${user.full_name ?? "Неизвестный"}: ${new_points} балл(ов) ✅`
+            );
           } else {
-            new_points = POINTS_PER_VISIT;
-            await db.insert(Rating).values({
+            await db.insert(Visiting).values({
               user_id: user.user_id,
-              ball: new_points,
+              date_visit: today,
+              status: "Отсутствовал(а)",
             });
+            marked_students.push(
+              `${user.full_name ?? "Неизвестный"}: ❌ отсутствовал(а)`
+            );
           }
-
-          marked_students.push(
-            `${user.full_name ?? "Неизвестный"}: ${new_points} балл(ов) ✅`
-          );
-        } else {
-          await db.insert(Visiting).values({
-            user_id: user.user_id,
-            date_visit: today,
-            status: "Отсутствовал(а)",
-          });
-          marked_students.push(
-            `${user.full_name ?? "Неизвестный"}: ❌ отсутствовал(а)`
-          );
         }
       }
     }
