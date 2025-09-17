@@ -1,12 +1,13 @@
 
-# Documentation 
+# TaskManagementBot - simplifying students learning
 
-Documentation for the discord bot. The TaskManagement bot is designed to automate student learning processes through discord.
+README for `TaskManagementBot`.
 
+This bot is designed to automate students learning processes through Discord.
 
 ## Tech Stack
 
-**Bot:** TypeScript, Bun, drizzle-orm, postgresql
+This bot was written using: `TypeScript, Bun, Drizzle ORM, PostgreSQL`
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Bun](https://img.shields.io/badge/Bun-%23000000?style=for-the-badge&logo=bun&logoColor=white)](https://bun.com/)
@@ -20,29 +21,36 @@ Documentation for the discord bot. The TaskManagement bot is designed to automat
 To run this project, you will need to add the following environment variables to your .env file
 
 `DATABASE_URL=<server_name>://<username>:<password>@<host>:<port>/<database>`
-`TOKEN=token_bot`
 
-`TEACHER_ROLE_ID=ID_Role`
-`ALLOWED_VOICE_CHANNEL_ID=Voice_Channel_ID`
+`TOKEN=your_bot_token`
 
+`TEACHER_ROLE_ID=teacher_role_id_here`
+
+`ALLOWED_VOICE_CHANNEL_ID=voice_channel_id`
 
 ## Installation
 
 Install TaskManagementBot with bun
 
 #### Installation Instructions
-1. created fork project.
-2. git clone
-3. create .env
-4. bun Install
-5. bun dev
+1. Run `git clone https://github.com/werobin05/TaskManagementBot`
+2. Run `cd TaskManagementBot`
+3. Create `.env` file and fill it out with variables provided above (you can use `nano .env` or any other IDEs/text editors you prefer)
+4. Run `bun install` to install required dependencies
+5. Enter `bun dev` to run this bot
 
 
+## Environment Variables
 
+To run this project, you will need to add the following environment variables to your .env file
 
+`DATABASE_URL`
+`TOKEN`
+`TEATHER_ROLE_NAME`
 
     
-## Authors
+## Authors & Contributors
 
-- [@werobin05](https://www.github.com/werobin05)
+- [@werobin05](https://www.github.com/werobin05) - Author
+- [@mrksbgg](https://github.com/mrksbgg) - Contributors
 
