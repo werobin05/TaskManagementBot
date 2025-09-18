@@ -14,7 +14,7 @@ export const mv: Command = {
   name: "mv",
   description:
     "Отмечает посещение студентов в аудитории. \nДанную команду может исполнять только преподаватель",
-  async execute(message) {
+  async execute(message, args) {
     if (
       !message.member?.roles.cache.some(
         (r) => r.id === process.env.TEACHER_ROLE_ID
@@ -23,6 +23,15 @@ export const mv: Command = {
       await message.reply("⛔ У тебя нет прав для выполнения этой команды.");
       return;
     }
+
+    const course_arg = args[0];
+    if (!course_arg || !["1", "2"].includes(course_arg)) {
+      await message.reply("⚠️ Укажи номер курса (1 или 2). Пример: ?mv 1");
+      return;
+    }
+
+    const course_role_id =
+      course_arg === "1" ? process.env.FIRST_COURSE : process.env.SECOND_COURSE;
 
     const voice_channel = message.guild?.channels.cache.get(
       process.env.ALLOWED_VOICE_CHANNEL_ID!
@@ -53,6 +62,10 @@ export const mv: Command = {
     const marked_students: string[] = [];
 
     for (const user of all_users) {
+      const guild_member = message.guild?.members.cache.get(String(user.discord_id));
+
+      if (!guild_member?.roles.cache.has(course_role_id!)) continue;
+
       const is_present = voice_members.has(String(user.discord_id));
 
       if (user) {
