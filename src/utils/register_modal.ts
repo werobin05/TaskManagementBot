@@ -16,28 +16,57 @@ export function RegisterModal(client: Client) {
     if (interaction.isButton() && interaction.customId === "register_button") {
       const modal = new ModalBuilder()
         .setCustomId("register_modal")
-        .setTitle("Регистрация учебного профиля");
+        .setTitle("Регистрация");
 
-      const full_name_input = new TextInputBuilder()
-        .setCustomId("full_name")
-        .setLabel("Введите своё ФИО")
+      const first_name_input = new TextInputBuilder()
+        .setCustomId("first_name")
+        .setLabel("Ваша фамилия")
         .setStyle(TextInputStyle.Short)
+        .setRequired(true);
+
+      const last_name_input = new TextInputBuilder()
+        .setCustomId("last_name")
+        .setLabel("Ваше имя")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true);
+
+      const patronymic_input = new TextInputBuilder()
+        .setCustomId("patronymic")
+        .setLabel("Ваше отчество")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true);
+
+      const course_input = new TextInputBuilder()
+        .setCustomId("course")
+        .setLabel("Введите номер курса")
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder("Пример: 1 курс")
         .setRequired(true);
 
       const group_input = new TextInputBuilder()
         .setCustomId("group")
         .setLabel("Введите свой номер группы")
+        .setPlaceholder("Пример: ИС221/1")
         .setStyle(TextInputStyle.Short)
         .setRequired(true);
 
       const row_1 = new ActionRowBuilder<TextInputBuilder>().addComponents(
-        full_name_input
+        first_name_input
       );
       const row_2 = new ActionRowBuilder<TextInputBuilder>().addComponents(
+        last_name_input
+      );
+      const row_3 = new ActionRowBuilder<TextInputBuilder>().addComponents(
+        patronymic_input
+      );
+      const row_4 = new ActionRowBuilder<TextInputBuilder>().addComponents(
+        course_input
+      );
+      const row_5 = new ActionRowBuilder<TextInputBuilder>().addComponents(
         group_input
       );
 
-      modal.addComponents(row_1, row_2);
+      modal.addComponents(row_1, row_2, row_3, row_4, row_5,);
 
       await interaction.showModal(modal);
     }
@@ -46,8 +75,10 @@ export function RegisterModal(client: Client) {
       interaction.isModalSubmit() &&
       interaction.customId === "register_modal"
     ) {
-      
-      const full_name = interaction.fields.getTextInputValue("full_name");
+      const first_name = interaction.fields.getTextInputValue("first_name");
+      const last_name = interaction.fields.getTextInputValue("last_name");
+      const patronymic = interaction.fields.getTextInputValue("patronymic");
+      const course = interaction.fields.getTextInputValue("course");
       const group = interaction.fields.getTextInputValue("group");
       const discord_id = BigInt(interaction.user.id);
 
@@ -64,8 +95,11 @@ export function RegisterModal(client: Client) {
         } else {
           await db.insert(Users).values({
             discord_id: discord_id,
-            full_name: full_name,
-            group: group,
+            first_name: first_name,
+            last_name: last_name,
+            patronymic: patronymic,
+            course: course,
+            group: group
           });
 
           await interaction.reply({

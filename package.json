@@ -1,5 +1,5 @@
 {
-  "name": "task_management_bot",
+  "name": "studify",
   "module": "index.ts",
   "type": "module",
   "version": "0.0.1",

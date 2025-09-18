@@ -1,7 +1,7 @@
 
-# TaskManagementBot - simplifying students learning
+# Studify - simplifying students learning
 
-README for `TaskManagementBot`.
+README for `Studify`.
 
 This bot is designed to automate students learning processes through Discord.
 
@@ -14,7 +14,6 @@ This bot was written using: `TypeScript, Bun, Drizzle ORM, PostgreSQL`
 
 [![Drizzle ORM](https://img.shields.io/badge/Drizzle%20ORM-A0AF9D?style=for-the-badge&logo=drizzle&logoColor=white)](https://orm.drizzle.team/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-
 
 ## Environment Variables
 
@@ -33,12 +32,12 @@ To run this project, you will need to add the following environment variables to
 Install TaskManagementBot with bun
 
 #### Installation Instructions
+
 1. Run `git clone https://github.com/werobin05/TaskManagementBot`
 2. Run `cd TaskManagementBot`
 3. Create `.env` file and fill it out with variables provided above (you can use `nano .env` or any other IDEs/text editors you prefer)
 4. Run `bun install` to install required dependencies
 5. Enter `bun dev` to run this bot
-
 
 ## Environment Variables
 
@@ -48,9 +47,7 @@ To run this project, you will need to add the following environment variables to
 `TOKEN`
 `TEATHER_ROLE_NAME`
 
-    
 ## Authors & Contributors
 
 - [@werobin05](https://www.github.com/werobin05) - Author
 - [@mrksbgg](https://github.com/mrksbgg) - Contributors
-
