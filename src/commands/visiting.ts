@@ -127,12 +127,12 @@ export const mv: Command = {
         }
       }
     }
-    if (marked_students.length === 0) {
-      await message.reply("ℹ️ Сегодня все студенты были отмечены.");
-    } else {
+    if (marked_students.length >= 1) {
       await message.reply(
         `📋 Отметка завершена:\n${marked_students.join("\n")}`
       );
+    } else {
+      await message.reply("ℹ️ Сегодня все студенты были отмечены.");
     }
   },
 };
