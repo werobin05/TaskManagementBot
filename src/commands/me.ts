@@ -12,7 +12,7 @@ import {
 
 export const me: Command = {
   name: "me",
-  description: "Открывает ваш профиль",
+  description: "Просмотр вашего профиля",
   async execute(message) {
     const color = parseInt("37bd83", 16);
 
@@ -62,7 +62,7 @@ export const me: Command = {
       new ButtonBuilder()
         .setCustomId("add_data")
         .setLabel("🎫 Добавить данные")
-        .setStyle(ButtonStyle.Primary),
+        .setStyle(ButtonStyle.Success),
       new ButtonBuilder()
         .setCustomId("edit_profile")
         .setLabel("✏️ Редактировать")
