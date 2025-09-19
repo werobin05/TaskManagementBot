@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import type { Command } from "./types/types";
 import { RegisterModal } from "./utils/register_modal";
 import { Client, Events, GatewayIntentBits } from "discord.js";
+import { AddedDataModal } from "./utils/add_data";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ export async function InitBot() {
   client.on(Events.ClientReady, (ready_client) => {
     console.log(`Logged in as ${ready_client.user.tag}`);
     RegisterModal(client);
+    AddedDataModal(client);
   });
   const commands = new Map<string, Command>();
   

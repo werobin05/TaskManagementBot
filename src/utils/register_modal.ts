@@ -5,7 +5,6 @@ import {
   TextInputStyle,
   TextInputBuilder,
   ActionRowBuilder,
-  MessageFlags,
 } from "discord.js";
 import { eq } from "drizzle-orm";
 import { db } from "../database";

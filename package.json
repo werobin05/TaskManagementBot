@@ -20,6 +20,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "discord.js": "^14.22.1",
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.44.5",
