@@ -2,7 +2,7 @@ import type { Command } from "../types/types";
 
 const ping: Command = {
   name: "ping",
-  description: "Простой пинг",
+  description: "Проверка подключение к боту",
   async execute(message) {
     const sent = await message.reply("🏓 Проверяю пинг...!");
     const latency = sent.createdTimestamp - message.createdTimestamp;

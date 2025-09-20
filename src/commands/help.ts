@@ -6,15 +6,15 @@ const help: Command = {
     description: "Выводит список всех доступных команд",
     async execute(message: Message, args: string[], command?: Map<string, Command>) {
         const bot_name = message.client.user?.username || "bot";
-        const color = parseInt("37bd83", 16)
+        const color = parseInt("5c92ff", 16)
         const embed = new EmbedBuilder()
           .setColor(color)
-          .setTitle(`${bot_name} - Список команд`)
-          .setDescription('Список доступных команд для использования\n префикс бота - "?"')
+          .setTitle(`${bot_name} - команды, для твоего удобства`)
+          .setDescription('Что бы использовать мои команды нужно написать: ?')
           .setThumbnail(message.client.user?.displayAvatarURL() || null)
           .setTimestamp()
           .setFooter({
-            text: `${message.author.username} держи список всех команд!`,
+            text: `${message.author.username} вот тебе список команд!`,
           });
 
         if (command) {
