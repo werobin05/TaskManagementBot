@@ -119,4 +119,4 @@ const rating: Command = {
   },
 };
 
-export default rating;
+// export default rating;

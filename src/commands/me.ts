@@ -1,13 +1,12 @@
 import { eq } from "drizzle-orm";
 import { db } from "../database";
 import type { Command } from "../types/types";
-import { Rating, Task, Users, UserTask } from "../database/schema";
+import { Rating, Users } from "../database/schema";
 import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
-  MessageFlags,
 } from "discord.js";
 
 export const me: Command = {
@@ -23,7 +22,6 @@ export const me: Command = {
       .from(Users)
       .leftJoin(Rating, eq(Users.user_id, Rating.user_id))
       .where(eq(Users.discord_id, discord_id));
-
 
     if (!profile_data) {
       message.reply("❌ Профиль не найден в базе.");
@@ -42,19 +40,17 @@ export const me: Command = {
           name: "Рейтинг",
           value: `${profile_data.Rating?.ball || 0}`,
           inline: true,
-        }, 
+        },
         {
           name: "Курс",
           value: `${profile_data.Users.course}`,
           inline: true,
         }
       )
-      .addFields(
-        {
-          name: "Логин",
-          value: `${profile_data.Users.login || "not login"}`,
-        }
-      )
+      .addFields({
+        name: "Логин",
+        value: `${profile_data.Users.login || "not login"}`,
+      })
       .setColor(color)
       .setTimestamp();
 
