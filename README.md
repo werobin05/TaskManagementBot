@@ -46,6 +46,9 @@ To run this project, you will need to add the following environment variables to
 `DATABASE_URL`
 `TOKEN`
 `TEATHER_ROLE_NAME`
+`FIRST_COURSE`
+`SECOND_COURSE`
+`GUILD_ID`
 
 ## Authors & Contributors
 

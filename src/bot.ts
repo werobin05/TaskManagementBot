@@ -19,14 +19,20 @@ export async function InitBot() {
   const client = new Client({
     intents: [
       GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMembers,
       GatewayIntentBits.GuildMessages,
       GatewayIntentBits.MessageContent,
     ],
   });
-  client.on(Events.ClientReady, (ready_client) => {
+  client.on(Events.ClientReady, async (ready_client) => {
     console.log(`Logged in as ${ready_client.user.tag}`);
     RegisterModal(client);
     AddedDataModal(client);
+    const guild = client.guilds?.cache.get(process.env.GUILD_ID!);
+    if (guild) {
+      await guild.members.fetch();
+      console.log("👥 All participants are uploaded to the cache");
+    }
   });
   const commands = new Map<string, Command>();
   

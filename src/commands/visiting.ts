@@ -57,18 +57,23 @@ export const mv: Command = {
       await message.reply("👥 В аудитории никого нету.");
     }
 
+    await message.guild?.members.fetch();
+
     const all_users = await db.select().from(Users);
     const today = new Date().toISOString().split("T")[0];
     const marked_students: string[] = [];
 
     for (const user of all_users) {
-      const guild_member = message.guild?.members.cache.get(String(user.discord_id));
-
-      const full_name = user.first_name + " " + user.last_name + " " + user.patronymic;
+      const guild_member_cached = message.guild?.members.cache.get(
+        String(user.discord_id)
+      );
+      let guild_member = guild_member_cached;
+      const full_name =
+        user.first_name + " " + user.last_name + " " + user.patronymic;
 
       if (!guild_member?.roles.cache.has(course_role_id!)) continue;
 
-      const is_present = voice_members.has(String(user.discord_id));
+      const is_present = voice_members.has(String(user.discord_id?.toString()));
 
       if (user) {
         const today_visit = await db
