@@ -25,9 +25,12 @@ const rating: Command = {
   description: "Таблица рейтинга",
   async execute(message) {
     try {
+      const color = parseInt("5c92ff", 16);
       const data = await db
         .select({
-          full_name: Users.full_name,
+          first_name: Users.first_name,
+          last_name: Users.last_name,
+          Patronymic: Users.patronymic,
           group: Users.group,
           scores: Rating.ball,
         })
@@ -46,12 +49,17 @@ const rating: Command = {
         const start = page * PAGE_SIZE;
         const slice = sorted.slice(start, start + PAGE_SIZE);
 
-        let desc = "```md\n № | ФИО                            | Группа     | Баллы\n";
+        let desc =
+          "```md\n № | ФИО                            | Группа     | Баллы\n";
         desc += "--------------------------------------------------------\n";
 
         slice.forEach((item, i) => {
           const num = (start + i + 1).toString().padEnd(2, " ");
-          const name = format_ceil(item.full_name || "-", MAX_NAME);
+          const name = format_ceil(
+            item.first_name + " " + item.last_name + " " + item.Patronymic ||
+              "-",
+            MAX_NAME
+          );
           const group = format_ceil(item.group || "-", MAX_GROUP);
           const score = (item.scores ?? 0).toString().padEnd(5, " ");
 
@@ -61,9 +69,14 @@ const rating: Command = {
         desc += "```";
 
         return new EmbedBuilder()
+          .setColor(color)
           .setTitle("🏆 Таблица рейтинга")
           .setDescription(desc)
-          .setFooter({ text: `Страница ${page + 1}/ ${total_page} | P.S Таблица работает в течении 2 минут` });
+          .setFooter({
+            text: `Страница ${
+              page + 1
+            }/ ${total_page} | P.S Таблица работает в течении 2 минут`,
+          });
       }
 
       const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -119,4 +132,4 @@ const rating: Command = {
   },
 };
 
-// export default rating;
+export default rating;
