@@ -34,16 +34,16 @@ const tasks: Command = {
 
     const rows: string[][] = [];
     for (const t of find_task) {
-      const deadline = t.deadline_task
-        ? new Date(t.deadline_task).toISOString().split("T")[0]
+      const deadline = t.task_deadline
+        ? new Date(t.task_deadline).toISOString().split("T")[0]
         : "Дедлайн не задан";
-      const desc_lines = wrapText(t.description_task ?? "", MAX_COL_WIDTH);
+      const desc_lines = wrapText(t.task_desc ?? "", MAX_COL_WIDTH);
 
       rows.push([
         t.task_id.toString(),
-        t.name_task,
+        t.task_desc!,
         desc_lines[0] ?? "",
-        t.status ?? "-",
+        t.task_status ?? "-",
         deadline!,
       ]);
 

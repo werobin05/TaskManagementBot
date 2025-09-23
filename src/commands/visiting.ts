@@ -64,7 +64,7 @@ export const mv: Command = {
     for (const user of all_users) {
       const guild_member = message.guild?.members.cache.get(String(user.discord_id));
 
-      const full_name = user.first_name + user.last_name;
+      const full_name = user.first_name + " " + user.last_name + " " + user.patronymic;
 
       if (!guild_member?.roles.cache.has(course_role_id!)) continue;
 
