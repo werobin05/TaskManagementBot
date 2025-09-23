@@ -64,6 +64,8 @@ export const mv: Command = {
     for (const user of all_users) {
       const guild_member = message.guild?.members.cache.get(String(user.discord_id));
 
+      const full_name = user.first_name + " " + user.last_name + " " + user.patronymic;
+
       if (!guild_member?.roles.cache.has(course_role_id!)) continue;
 
       const is_present = voice_members.has(String(user.discord_id));
@@ -112,7 +114,7 @@ export const mv: Command = {
             }
 
             marked_students.push(
-              `${user.full_name ?? "Неизвестный"}: ${new_points} балл(ов) ✅`
+              `${full_name ?? "Неизвестный"}: ${new_points} балл(ов) ✅`
             );
           } else {
             await db.insert(Visiting).values({
@@ -121,18 +123,18 @@ export const mv: Command = {
               status: "Отсутствовал(а)",
             });
             marked_students.push(
-              `${user.full_name ?? "Неизвестный"}: ❌ отсутствовал(а)`
+              `${full_name ?? "Неизвестный"}: ❌ отсутствовал(а)`
             );
           }
         }
       }
     }
-    if (marked_students.length === 0) {
-      await message.reply("ℹ️ Сегодня все студенты были отмечены.");
-    } else {
+    if (marked_students.length >= 1) {
       await message.reply(
         `📋 Отметка завершена:\n${marked_students.join("\n")}`
       );
+    } else {
+      await message.reply("ℹ️ Сегодня все студенты были отмечены.");
     }
   },
 };
