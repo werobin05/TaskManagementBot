@@ -28,11 +28,6 @@ export async function InitBot() {
     console.log(`Logged in as ${ready_client.user.tag}`);
     RegisterModal(client);
     AddedDataModal(client);
-    const guild = client.guilds?.cache.get(process.env.GUILD_ID!);
-    if (guild) {
-      await guild.members.fetch();
-      console.log("👥 All participants are uploaded to the cache");
-    }
   });
   const commands = new Map<string, Command>();
   
