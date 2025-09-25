@@ -52,7 +52,7 @@ export const Task = pgTable("Task", {
   task_desc: varchar("description_task", { length: 400 }),
   task_status: task_status().default("В процессе"),
   task_deadline: date("task_deadline", { mode: "string"}).defaultNow(),
-  score: numeric("score", { precision: 4, scale: 4, mode: "number" }).default(0.00),
+  score: numeric("score", { precision: 4, scale: 2, mode: "number" }).default(0.00),
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
 });
 
