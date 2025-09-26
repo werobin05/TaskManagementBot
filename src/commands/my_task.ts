@@ -36,7 +36,7 @@ export const MyTask: Command = {
         .addOptions(
           my_task.map((task) => ({
             label: task.task_name,
-            value: String(task.task_deadline),
+            value: String(task.ut_id),
             description: task.task_desc ?? "Описание отсуствует",
           }))
         );
