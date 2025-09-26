@@ -57,8 +57,8 @@ export const Task = pgTable("Task", {
 });
 
 export const UserTask = pgTable("UserTask", {
+  ut_id: integer("ut_id").primaryKey().generatedAlwaysAsIdentity(),
   user_id: integer("user_id").references(() => Users.user_id),
-  rating_id: integer("rating_id").references(() => Rating.rank_id),
   task_name: varchar("name_task", { length: 100 }).notNull(),
   task_desc: varchar("description_task", { length: 400 }),
   task_status: task_status().default("В процессе"),
