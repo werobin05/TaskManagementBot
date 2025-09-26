@@ -53,93 +53,94 @@ export const mv: Command = {
     }
 
     const voice_members = voice_channel.members;
-    if (voice_members.size === 0) {
-      await message.reply("👥 В аудитории никого нету.");
-    }
+    if (voice_members.size !== 0) {
+      await message.guild?.members.fetch();
 
-    await message.guild?.members.fetch();
+      const all_users = await db.select().from(Users);
+      const today = new Date().toISOString().split("T")[0];
+      const marked_students: string[] = [];
 
-    const all_users = await db.select().from(Users);
-    const today = new Date().toISOString().split("T")[0];
-    const marked_students: string[] = [];
+      for (const user of all_users) {
+        const guild_member_cached = message.guild?.members.cache.get(
+          String(user.discord_id)
+        );
+        let guild_member = guild_member_cached;
+        const full_name =
+          user.first_name + " " + user.last_name + " " + user.patronymic;
 
-    for (const user of all_users) {
-      const guild_member_cached = message.guild?.members.cache.get(
-        String(user.discord_id)
-      );
-      let guild_member = guild_member_cached;
-      const full_name =
-        user.first_name + " " + user.last_name + " " + user.patronymic;
+        if (!guild_member?.roles.cache.has(course_role_id!)) continue;
 
-      if (!guild_member?.roles.cache.has(course_role_id!)) continue;
+        const is_present = voice_members.has(String(user.discord_id));
 
-      const is_present = voice_members.has(String(user.discord_id?.toString()));
+        if (user) {
+          const today_visit = await db
+            .select()
+            .from(Visiting)
+            .where(
+              and(
+                eq(Visiting.user_id, user.user_id),
+                eq(Visiting.date_visit, today)
+              )
+            );
 
-      if (user) {
-        const today_visit = await db
-          .select()
-          .from(Visiting)
-          .where(
-            and(
-              eq(Visiting.user_id, user.user_id),
-              eq(Visiting.date_visit, today)
-            )
-          );
-
-        if (today_visit.length === 0) {
-          if (is_present) {
-            await db.insert(Visiting).values({
-              user_id: user.user_id,
-              date_visit: today,
-              status: "Присутствовал(а)",
-            });
-
-            const rating = (
-              await db
-                .select()
-                .from(Rating)
-                .where(eq(Rating.user_id, user.user_id))
-            )[0];
-            let new_points: number;
-            if (rating) {
-              new_points = Math.min(
-                rating.ball! + POINTS_PER_VISIT,
-                MAX_POINTS
-              );
-              await db
-                .update(Rating)
-                .set({ ball: new_points })
-                .where(eq(Rating.user_id, user.user_id));
-            } else {
-              new_points = POINTS_PER_VISIT;
-              await db.insert(Rating).values({
+          if (today_visit.length === 0) {
+            if (is_present) {
+              await db.insert(Visiting).values({
                 user_id: user.user_id,
-                ball: new_points,
+                date_visit: today,
+                status: "Присутствовал(а)",
               });
-            }
 
-            marked_students.push(
-              `${full_name ?? "Неизвестный"}: ${new_points} балл(ов) ✅`
-            );
-          } else {
-            await db.insert(Visiting).values({
-              user_id: user.user_id,
-              date_visit: today,
-              status: "Отсутствовал(а)",
-            });
-            marked_students.push(
-              `${full_name ?? "Неизвестный"}: ❌ отсутствовал(а)`
-            );
+              const rating = (
+                await db
+                  .select()
+                  .from(Rating)
+                  .where(eq(Rating.user_id, user.user_id))
+              )[0];
+              let new_points: number;
+              if (rating) {
+                new_points = Math.min(
+                  rating.ball! + POINTS_PER_VISIT,
+                  MAX_POINTS
+                );
+                await db
+                  .update(Rating)
+                  .set({ ball: new_points })
+                  .where(eq(Rating.user_id, user.user_id));
+              } else {
+                new_points = POINTS_PER_VISIT;
+                await db.insert(Rating).values({
+                  user_id: user.user_id,
+                  ball: new_points,
+                });
+              }
+
+              marked_students.push(
+                `${full_name ?? "Неизвестный"}: ${new_points} балл(ов) ✅`
+              );
+            } else {
+              await db.insert(Visiting).values({
+                user_id: user.user_id,
+                date_visit: today,
+                status: "Отсутствовал(а)",
+              });
+              marked_students.push(
+                `${full_name ?? "Неизвестный"}: ❌ отсутствовал(а)`
+              );
+            }
           }
         }
       }
-    }
-    if (marked_students.length >= 1) {
-      await message.reply(
-        `📋 Отметка завершена:\n${marked_students.join("\n")}`
-      );
+      if (marked_students.length >= 1) {
+        await message.reply(
+          `📋 Отметка завершена:\n${marked_students.join("\n")}`
+        );
+      } else {
+        await message.reply("ℹ️ Сегодня все студенты были отмечены.");
+      }
     } else {
-      await message.reply("ℹ️ Сегодня все студенты были отмечены.");
+      await message.reply("👥 В аудитории никого нету.");
+      return;
     }
   },
 };
