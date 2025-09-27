@@ -43,12 +43,21 @@ Install TaskManagementBot with bun
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`DATABASE_URL`
-`TOKEN`
-`TEATHER_ROLE_NAME`
-`FIRST_COURSE`
-`SECOND_COURSE`
-`GUILD_ID`
+`DATABASE_URL` - url connection database
+
+`TOKEN` - token discord bot
+
+`TEATHER_ROLE_ID` - your id role admin
+
+`FIRST_COURSE` - role id, for student, first course
+
+`SECOND_COURSE` - role id, for student, second course
+
+`GUILD_ID` - guild id, your guilds
+
+`TEACHER_ID` - your discord id
+
+`CATEGORY_ID` - your category id, for private channels
 
 ## Authors & Contributors
 
