@@ -4,9 +4,10 @@ import { readdirSync } from "fs";
 import { pathToFileURL } from "url";
 import { fileURLToPath } from "url";
 import type { Command } from "./types/types";
+import { MyTaskAbout } from "./utils/mt_about";
+import { AddedDataModal } from "./utils/add_data";
 import { RegisterModal } from "./utils/register_modal";
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import { AddedDataModal } from "./utils/add_data";
 
 dotenv.config();
 
@@ -28,11 +29,7 @@ export async function InitBot() {
     console.log(`Logged in as ${ready_client.user.tag}`);
     RegisterModal(client);
     AddedDataModal(client);
-    const guild = client.guilds?.cache.get(process.env.GUILD_ID!);
-    if (guild) {
-      await guild.members.fetch();
-      console.log("👥 All participants are uploaded to the cache");
-    }
+    MyTaskAbout(client);
   });
   const commands = new Map<string, Command>();
   

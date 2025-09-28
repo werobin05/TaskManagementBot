@@ -2,7 +2,7 @@
   "name": "studify",
   "module": "index.ts",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "scripts": {
     "dev": "bun --watch index.ts",
     "start": "bun index.ts",

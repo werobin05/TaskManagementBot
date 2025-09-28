@@ -52,13 +52,13 @@ export const Task = pgTable("Task", {
   task_desc: varchar("description_task", { length: 400 }),
   task_status: task_status().default("В процессе"),
   task_deadline: date("task_deadline", { mode: "string"}).defaultNow(),
-  score: numeric("score", { precision: 4, scale: 4, mode: "number" }).default(0.00),
+  score: numeric("score", { precision: 4, scale: 2, mode: "number" }).default(0.00),
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
 });
 
 export const UserTask = pgTable("UserTask", {
+  ut_id: integer("ut_id").primaryKey().generatedAlwaysAsIdentity(),
   user_id: integer("user_id").references(() => Users.user_id),
-  rating_id: integer("rating_id").references(() => Rating.rank_id),
   task_name: varchar("name_task", { length: 100 }).notNull(),
   task_desc: varchar("description_task", { length: 400 }),
   task_status: task_status().default("В процессе"),
