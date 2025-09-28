@@ -25,8 +25,8 @@ export const mv: Command = {
     }
 
     const course_arg = args[0];
-    if (!course_arg || !["1", "2"].includes(course_arg)) {
-      await message.reply("⚠️ Укажи номер курса (1 или 2). Пример: ?mv 1");
+    if (!course_arg || !["1", "2", "1.1"].includes(course_arg)) {
+      await message.reply("⚠️ Укажи номер курса (1, 2, 1.1). Пример: ?mv 1");
       return;
     }
 

@@ -1,10 +1,7 @@
 import { db } from "../database";
 import type { Command } from "../types/types";
 import { UserTask, Users } from "../database/schema";
-import {
-  ActionRowBuilder,
-  StringSelectMenuBuilder,
-} from "discord.js";
+import { ActionRowBuilder, StringSelectMenuBuilder } from "discord.js";
 import { eq } from "drizzle-orm";
 
 export const MyTask: Command = {
@@ -47,8 +44,8 @@ export const MyTask: Command = {
 
       await message.reply({
         content: "📋 Твой список задач: ",
-        components: [row]
-      })
+        components: [row],
+      });
     } else {
       await message.reply("📭 У тебя пока нет задач.");
       return;

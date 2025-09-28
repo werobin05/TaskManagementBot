@@ -169,7 +169,7 @@ export function MyTaskAbout(client: Client) {
           await channel.send({ embeds: [embed] });
         }
         await interaction.editReply({
-          content: `Задача #${ut_id} успешно отправлена на проверку ✅`,
+          content: `Задача успешно отправлена на проверку ✅`,
         });
       }
     }
