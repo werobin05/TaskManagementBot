@@ -25,13 +25,36 @@ export const mv: Command = {
     }
 
     const course_arg = args[0];
-    if (!course_arg || !["1", "2", "1.1"].includes(course_arg)) {
-      await message.reply("⚠️ Укажи номер курса (1, 2, 1.1). Пример: ?mv 1");
+
+    if (
+      !course_arg ||
+      !["241", "251", "252"].includes(course_arg)
+    ) {
+      await message.reply("⚠️ Укажи номер группы (241, 251, 252). Пример: ?mv 241");
       return;
     }
 
-    const course_role_id =
-      course_arg === "1" ? process.env.FIRST_COURSE : process.env.SECOND_COURSE;
+    const course_role_id = course_arg;
+
+    function selectedGroupStudentsMarked() {
+
+      switch (course_role_id) {
+        case "242":
+          process.env.SECOND_COURSE;
+          break;
+        case "251":
+          process.env.FIRST_COURSE;
+          break;
+        case "252":
+          process.env.FIRST_UP_COURSE;
+          break;
+        default:
+          message.reply("Такой группы не существует");
+          return;
+      }
+    }
+
+    selectedGroupStudentsMarked();
 
     const voice_channel = message.guild?.channels.cache.get(
       process.env.ALLOWED_VOICE_CHANNEL_ID!
