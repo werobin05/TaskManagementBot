@@ -25,13 +25,30 @@ export const mv: Command = {
     }
 
     const course_arg = args[0];
-    if (!course_arg || !["1", "2", "1.1"].includes(course_arg)) {
-      await message.reply("⚠️ Укажи номер курса (1, 2, 1.1). Пример: ?mv 1");
+
+    if (!course_arg || !["241", "251", "252"].includes(course_arg)) {
+      await message.reply(
+        "⚠️ Укажи номер группы (241, 251, 252). Пример: ?mv 241"
+      );
       return;
     }
 
-    const course_role_id =
-      course_arg === "1" ? process.env.FIRST_COURSE : process.env.SECOND_COURSE;
+    const course_role_id = course_arg;
+
+    switch (course_role_id) {
+      case "241":
+        process.env.SECOND_COURSE;
+        break;
+      case "251":
+        process.env.FIRST_COURSE;
+        break;
+      case "252":
+        process.env.FIRST_UP_COURSE;
+        break;
+      default:
+        message.reply("Такой группы не существует");
+        return;
+    }
 
     const voice_channel = message.guild?.channels.cache.get(
       process.env.ALLOWED_VOICE_CHANNEL_ID!
@@ -53,7 +70,7 @@ export const mv: Command = {
     }
 
     const voice_members = voice_channel.members;
-    if (voice_members.size !== 0) {
+    if (voice_members.size > 0) {
       await message.guild?.members.fetch();
 
       const all_users = await db.select().from(Users);
@@ -61,14 +78,8 @@ export const mv: Command = {
       const marked_students: string[] = [];
 
       for (const user of all_users) {
-        const guild_member_cached = message.guild?.members.cache.get(
-          String(user.discord_id)
-        );
-        let guild_member = guild_member_cached;
         const full_name =
           user.first_name + " " + user.last_name + " " + user.patronymic;
-
-        if (!guild_member?.roles.cache.has(course_role_id!)) continue;
 
         const is_present = voice_members.has(String(user.discord_id));
 
@@ -83,7 +94,7 @@ export const mv: Command = {
               )
             );
 
-          if (today_visit.length === 0) {
+          if (today_visit.length == 0) {
             if (is_present) {
               await db.insert(Visiting).values({
                 user_id: user.user_id,
@@ -131,7 +142,7 @@ export const mv: Command = {
           }
         }
       }
-      if (marked_students.length >= 1) {
+      if (marked_students.length > 0) {
         await message.reply(
           `📋 Отметка завершена:\n${marked_students.join("\n")}`
         );
